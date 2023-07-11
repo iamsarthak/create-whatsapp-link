@@ -10,16 +10,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
 	<script type="text/javascript" src="whatsapp.js"></script>
+	<style>
+		@media only screen and (max-width: 600px) {
+		      .container {
+		        width: 100%;
+		        padding: 0;
+		      }
+		      input {
+		        width: 100%;
+		      }
+		    }
+	</style>
 </head>
 <body>
 <div class="container">
 Enter the number<input  value = "" id="number" type="text"></input>
+Enter the message that you want to send on whatsapp <input id="message" type="text" value = "" name="message"></input>
 Enter Name (optional) <input placeholder="Name" id="name" type="text"></input>
 Enter Company Name (optional)<input id="cName" type="text" name="cName"></input>
 City(optional) : <input type="text" id="city" name=""></input>
 Email(optional)  : <input type="text" id="email" name=""></input>
 Comments(optional) : <input type="text" id="comments" name=""></input>
-Enter the message that you want to send on whatsapp <input id="message" type="text" value = "" name="message"></input>
 <button class="btn waves-effect waves-light"  onclick="send()">SEND</button>
 <a id="myClick" href=""></a>
 </div>
