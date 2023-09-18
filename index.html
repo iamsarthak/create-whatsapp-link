@@ -5,44 +5,46 @@
     <title>WhatsApp Quick Chat</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> <!-- For icons -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures mobile responsiveness -->
 </head>
 
 <body>
 
     <div class="container mt-5">
-        <h2>WhatsApp Quick Chat</h2>
-        <p>This tool allows you to send a WhatsApp message without saving someone's number. Just enter the number and your message, and you're good to go!</p>
+        <h2><i class="fab fa-whatsapp"></i> WhatsApp Quick Chat</h2>
+        <p>This tool allows you to initiate a <b>WhatsApp chat</b> without saving someone's number. Just enter the number and your message, and you're good to go!</p>
         <form id="whatsappForm">
             <div class="form-group">
-                <label for="number">Mobile Number:</label>
+                <label for="number"><i class="fas fa-phone"></i> Mobile Number:</label>
                 <input type="text" class="form-control" id="number" placeholder="Enter number" name="number" required>
             </div>
 
             <div class="form-group">
-                <label for="message">Message (optional):</label>
+                <label for="message"><i class="fas fa-envelope"></i> Message (optional):</label>
                 <input type="text" class="form-control" id="message" placeholder="Enter message" name="message">
             </div>
 
             <div id="firebaseFields" style="display: none;">
-                <!-- You can add the additional fields related to Firebase here -->
+                <!-- Additional Firebase fields can be added here -->
             </div>
 
-            <button type="button" class="btn btn-primary" onclick="send()">SEND</button>
+            <button type="button" class="btn btn-success" onclick="send()"><i class="fab fa-whatsapp"></i> Send on WhatsApp</button>
         </form>
         <a id="myClick" href="" style="display: none;"></a>
 
         <!-- Detailed Description at the Bottom -->
         <div class="mt-5">
-            <h4>How Does This Work?</h4>
-            <p>Ever wanted to send a quick WhatsApp message to someone without the hassle of saving their number? That's where this tool comes in handy. Instead of going through the process of adding a contact to your phone, you can simply enter the number and message here, and we'll create a direct link to start a chat with the entered number on WhatsApp.</p>
-            <p>This is especially useful for business interactions or one-time communications where you don't want to save a contact permanently. Using our tool ensures you maintain a clutter-free contact list while still being able to communicate swiftly.</p>
+            <h4>How Does WhatsApp Quick Chat Work?</h4>
+            <p>Ever wanted to send a quick WhatsApp message to someone without the hassle of saving their number? With <b>WhatsApp Quick Chat</b>, you can do exactly that. Instead of adding a contact to your phone, simply enter the number and message here, and we'll create a direct link to initiate a chat with the entered number on WhatsApp.</p>
+            <p>This is especially useful for business interactions, online shopping inquiries, or one-time communications where you might not want to save a contact permanently. Use our tool to maintain a clutter-free contact list while still communicating swiftly on WhatsApp.</p>
             <p><b>Note:</b> Your privacy is paramount to us. We don't store any of the numbers or messages you enter. Everything happens directly on your device.</p>
         </div>
-
     </div>
 
     <script>
@@ -61,7 +63,15 @@
             $("a")[0].click();
         }
 
-        // You can add Firebase-related functions and initialization here if needed.
+        // Focus on the mobile number input if on a mobile device
+        if (window.innerWidth <= 800) {
+            setTimeout(() => {
+                window.scrollTo(0, 0); // Ensure top of the page
+                $("#number").focus();
+            }, 100);
+        }
+
+        // Firebase-related functions and initialization can be added here if needed.
     </script>
 
 </body>
