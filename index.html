@@ -40,8 +40,8 @@
             </select>
         </div>
 
-        <h1 class="text-2xl font-bold mb-4">WhatsApp Direct Messenger</h1>
-        <p class="text-gray-700 mb-4">Send WhatsApp messages without saving the contact.</p>
+        <h1 data-text="title" class="text-2xl font-bold mb-4">WhatsApp Direct Messenger</h1>
+        <p data-text="description" class="text-gray-700 mb-4">Send WhatsApp messages without saving the contact.</p>
 
 
         <!-- Country Code and Number Input -->
@@ -59,7 +59,7 @@
             </div>
             <div class="sm:col-span-3">
                 <label for="number" class="block text-sm font-medium text-gray-700" data-text="enter_number">Enter Number</label>
-                <input type="text" id="number" name="number" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <input type="number" id="number" name="number" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
         </div>
 
@@ -139,7 +139,7 @@
 
         <!-- QR Code Actions -->
 <div id="qrActions" class="mb-6 flex justify-center hidden"> <!-- Add 'hidden' class to hide initially -->
-    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded ml-4" onclick="downloadQRCodeWithText()" data-text="download_qr">Download QR Code</button>
+    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded ml-4" onclick="downloadQRCodeWithText()" >Download QR Code</button>
 </div>
 
        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-3xl">
@@ -161,7 +161,7 @@
 const translations = {
             "en": {
                 "choose_language": "Choose Language",
-                "title": "WhatsDirect Pro",
+                "title": "Whatsapp Direct Messenger",
                 "description": "Chat on WhatsApp without saving numbers. Simplify. Enhance. Connect.",
                 "enter_number": "Enter Number",
                 "enter_message": "Enter Message (Optional)",
@@ -176,7 +176,7 @@ const translations = {
             },
             "hi": {
                 "choose_language": "भाषा चुनें",
-                "title": "WhatsDirect प्रो",
+                "title": "Whatsapp Direct Messenger",
                 "description": "बिना नंबर सहेजे व्हाट्सएप पर चैट करें। सरलीकरें। बढ़ाएं। जुड़ें।",
                 "enter_number": "नंबर दर्ज करें",
                 "enter_message": "संदेश दर्ज करें (वैकल्पिक)",
@@ -191,7 +191,7 @@ const translations = {
             },
             "hinglish": {
                 "choose_language": "Language select karo",
-                "title": "WhatsDirect Pro",
+                "title": "Whatsapp Direct Messenger",
                 "description": "WhatsApp par chat karo bina number save kiye. Simplify karo. Enhance karo. Connect karo.",
                 "enter_number": "Number type karo",
                 "enter_message": "Message type karo (Optional)",
