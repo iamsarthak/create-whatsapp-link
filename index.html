@@ -2,78 +2,347 @@
 <html>
 
 <head>
-    <title>WhatsApp Quick Chat</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> <!-- For icons -->
-
+    <title>WhatsDirect Pro</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures mobile responsiveness -->
 </head>
 
-<body>
+<body class="bg-gray-100 py-10">
 
-    <div class="container mt-5">
-        <h2><i class="fab fa-whatsapp"></i> WhatsApp Quick Chat</h2>
-        <p>This tool allows you to initiate a <b>WhatsApp chat</b> without saving someone's number. Just enter the number and your message, and you're good to go!</p>
-        <form id="whatsappForm">
-            <div class="form-group">
-                <label for="number"><i class="fas fa-phone"></i> Mobile Number:</label>
-                <input type="text" class="form-control" id="number" placeholder="Enter number" name="number" required>
-            </div>
-
-            <div class="form-group">
-                <label for="message"><i class="fas fa-envelope"></i> Message (optional):</label>
-                <input type="text" class="form-control" id="message" placeholder="Enter message" name="message">
-            </div>
-
-            <div id="firebaseFields" style="display: none;">
-                <!-- Additional Firebase fields can be added here -->
-            </div>
-
-            <button type="button" class="btn btn-success" onclick="send()"><i class="fab fa-whatsapp"></i> Send on WhatsApp</button>
-        </form>
-        <a id="myClick" href="" style="display: none;"></a>
-
-        <!-- Detailed Description at the Bottom -->
-        <div class="mt-5">
-            <h4>How Does WhatsApp Quick Chat Work?</h4>
-            <p>Ever wanted to send a quick WhatsApp message to someone without the hassle of saving their number? With <b>WhatsApp Quick Chat</b>, you can do exactly that. Instead of adding a contact to your phone, simply enter the number and message here, and we'll create a direct link to initiate a chat with the entered number on WhatsApp.</p>
-            <p>This is especially useful for business interactions, online shopping inquiries, or one-time communications where you might not want to save a contact permanently. Use our tool to maintain a clutter-free contact list while still communicating swiftly on WhatsApp.</p>
-            <p><b>Note:</b> Your privacy is paramount to us. We don't store any of the numbers or messages you enter. Everything happens directly on your device.</p>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-3xl">
+        <!-- Language Selector -->
+        <div class="mb-6">
+            <label for="language" class="block text-sm font-medium text-gray-700" data-text="choose_language">Choose Language</label>
+            <select id="language" name="language" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="hinglish">Hinglish</option>
+            </select>
         </div>
+
+        <h1 class="text-2xl font-bold mb-4">WhatsApp Direct Messenger</h1>
+        <p class="text-gray-700 mb-4">Send WhatsApp messages without saving the contact.</p>
+
+
+        <!-- Country Code and Number Input -->
+        <div class="mb-6 grid grid-cols-1 sm:grid-cols-5 gap-6">
+            <div class="sm:col-span-2">
+                <label for="countryCode" class="block text-sm font-medium text-gray-700">Country Code</label>
+                <select id="countryCode" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    
+                    <option value="+91">India (+91)</option>
+                    <option value="+1">USA (+1)</option>
+                    <!-- ... more country codes ... -->
+                    <option value="custom">Enter your own</option>
+                </select>
+
+            </div>
+            <div class="sm:col-span-3">
+                <label for="number" class="block text-sm font-medium text-gray-700" data-text="enter_number">Enter Number</label>
+                <input type="text" id="number" name="number" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+        </div>
+
+        <!-- Message Input -->
+        <div class="mb-6">
+            <label for="message" class="block text-sm font-medium text-gray-700" data-text="enter_message">Enter Message (Optional)</label>
+            <textarea id="message" name="message" rows="4" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+        </div>
+
+        <!-- Canned Responses -->
+        <div class="mb-6">
+            <label for="cannedResponse" class="block text-sm font-medium text-gray-700" data-text="canned_responses">Or Use Quick Messages</label>
+            <select id="cannedResponse" name="cannedResponse" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="">-- Select --</option>
+                <option data-text="quick_hello">Hello, how can I assist you today?</option>
+                <option data-text="quick_info">Can you provide more information?</option>
+                <option data-text="quick_thanks">Thank you for reaching out!</option>
+                <option data-text="quick_call_me">Please call me when you're free.</option>
+                <option data-text="quick_meeting">Can we schedule a meeting?</option>
+                <option data-text="quick_availability">When are you available?</option>
+                <option data-text="quick_feedback">Could you provide your feedback?</option>
+                <option data-text="quick_confirmation">Can you confirm your attendance?</option>
+                <option data-text="quick_details">Please send me the details.</option>
+                <option data-text="quick_followup">Just following up on my last message.</option>
+                <option data-text="quick_hi_hi">नमस्ते, कैसे मदद कर सकता हूँ?</option>
+                <option data-text="quick_info_hi">आप और जानकारी प्रदान कर सकते हैं?</option>
+                <option data-text="quick_thanks_hi">आपका धन्यवाद!</option>
+                <option data-text="quick_call_me_hi">कृपया मुझे फोन करें जब आप फुर्सत में हों।</option>
+                <option data-text="quick_meeting_hi">हम एक मुलाकात तय कर सकते हैं?</option>
+                <option data-text="quick_availability_hi">आप कब उपलब्ध हैं?</option>
+                <option data-text="quick_feedback_hi">क्या आप अपनी प्रतिक्रिया प्रदान कर सकते हैं?</option>
+                <option data-text="quick_confirmation_hi">क्या आप उपस्थिति की पुष्टि कर सकते हैं?</option>
+                <option data-text="quick_details_hi">कृपया मुझे विवरण भेजें।</option>
+                <option data-text="quick_followup_hi">मैं अपने पिछले संदेश का पालन कर रहा हूँ।</option>
+                <option data-text="quick_hi_hi">नमस्ते, कैसे मदद कर सकता हूँ?</option>
+                <option data-text="quick_info_hi">आप और जानकारी प्रदान कर सकते हैं?</option>
+                <option data-text="quick_thanks_hi">आपका धन्यवाद!</option>
+                <option data-text="quick_call_me_hi">कृपया मुझे फोन करें जब आप फुर्सत में हों।</option>
+                <option data-text="quick_meeting_hi">हम एक मुलाकात तय कर सकते हैं?</option>
+                <option data-text="quick_availability_hi">आप कब उपलब्ध हैं?</option>
+                <option data-text="quick_feedback_hi">क्या आप अपनी प्रतिक्रिया प्रदान कर सकते हैं?</option>
+                <option data-text="quick_confirmation_hi">क्या आप उपस्थिति की पुष्टि कर सकते हैं?</option>
+                <option data-text="quick_details_hi">कृपया मुझे विवरण भेजें।</option>
+                <option data-text="quick_followup_hi">मैं अपने पिछले संदेश का पालन कर रहा हूँ।</option>
+                <option data-text="quick_hi_hinglish">Namaste, kaise help kar sakta hoon?</option>
+                <option data-text="quick_info_hinglish">Can you provide aur jankari?</option>
+                <option data-text="quick_thanks_hinglish">Thank you bhot bhot!</option>
+                <option data-text="quick_call_me_hinglish">Please call karo jab free ho.</option>
+                <option data-text="quick_meeting_hinglish">Meeting schedule karein?</option>
+                <option data-text="quick_availability_hinglish">Tum kab available ho?</option>
+                <option data-text="quick_feedback_hinglish">Feedback de sakte ho?</option>
+                <option data-text="quick_confirmation_hinglish">Attendance confirm karo please?</option>
+                <option data-text="quick_details_hinglish">Details send karo mujhe.</option>
+                <option data-text="quick_followup_hinglish">Last message ka follow up kar raha hoon.</option>
+            </select>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700" data-text="display_label">Your Message:</label>
+            <div id="displayMessage" class="mt-2 p-3 border border-gray-300 bg-white rounded-md shadow-sm"></div>
+        </div>
+
+        <!-- Actions: Send Message or Generate Link -->
+        <div class="mb-6 flex flex-col sm:flex-row justify-start sm:justify-between">
+            <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded" onclick="sendMessage()" data-text="start_chat">Start Chat</button>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded ml-4" onclick="generateLink()" data-text="generate_link">Generate DirectChat Link</button>
+        </div>
+
+<div id="linkDisplay" style="display: none;">
+    Your WhatsApp Link: <p id="whatsappLink" href="" target="_blank">Click here to access</p>
+</div>
+        <!-- QR Code Display and Actions -->
+<div id="qrcode" class="mb-6 text-center hidden"> <!-- Add 'hidden' class to hide initially -->
+    <p class="text-center font-bold mb-2" data-text="qr_heading">👋 Hey there! Want to chat? Scan this and drop me a WhatsApp message!</p>
+    <!-- QR Code will be generated here -->
+</div>
+
+        <!-- QR Code Actions -->
+<div id="qrActions" class="mb-6 flex justify-center hidden"> <!-- Add 'hidden' class to hide initially -->
+    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded ml-4" onclick="downloadQRCodeWithText()" data-text="download_qr">Download QR Code</button>
+</div>
+
+       <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-3xl">
+    <h1 class="text-3xl font-semibold mb-4" data-text="title">WhatsApp Direct Chat 🚀</h1>
+    <p class="text-gray-600 mb-6">
+        Feeling frustrated that you can't send a WhatsApp message without saving a contact? 😓 Say goodbye to that annoyance!
+        With "WhatsApp Direct Chat", swiftly send messages to phone numbers not in your contacts. Just enter the number, craft your message, and boom - dive straight into a WhatsApp chat! 🎉
+        And to make things even smoother, we give you the power to generate a QR code. Others can scan this to start chatting with you without needing your number saved. 🙌
+        Ever needed to send a quick note to someone temporarily, like a delivery driver or a new acquaintance? Now, without flooding your contacts, send a message with ease. Keep your contact list clean and your messaging efficient!
+    </p>
+</div>
     </div>
 
-    <script>
-        function send() {
-            let number = $("#number").val().replace(/\D/g, ''); // Remove all non-digit characters
-            if (number.length !== 10) {
-                alert("Please enter a valid 10-digit mobile number!");
-                return;
-            }
-
-            let message = $('#message').val();
-            message = encodeURIComponent(message.trim());
-            let link = 'whatsapp://send?phone=91' + number + '&text=' + message;
-
-            $("a").attr("href", link);
-            $("a")[0].click();
-        }
-
-        // Focus on the mobile number input if on a mobile device
-        if (window.innerWidth <= 800) {
-            setTimeout(() => {
-                window.scrollTo(0, 0); // Ensure top of the page
-                $("#number").focus();
-            }, 100);
-        }
-
-        // Firebase-related functions and initialization can be added here if needed.
-    </script>
+    
 
 </body>
+<script type="text/javascript">
+const translations = {
+            "en": {
+                "choose_language": "Choose Language",
+                "title": "WhatsDirect Pro",
+                "description": "Chat on WhatsApp without saving numbers. Simplify. Enhance. Connect.",
+                "enter_number": "Enter Number",
+                "enter_message": "Enter Message (Optional)",
+                "canned_responses": "Or Use Quick Messages",
+                "quick_hello": "Hello, how can I assist you today?",
+                "quick_info": "Can you provide more information?",
+                "start_chat": "Start Chat",
+                "generate_link": "Generate DirectChat Link",
+                "how_it_works": "How it works?",
+                "how_it_works_description": "Select a language, type the recipient's number, and either type your own message or choose one from our suggestions. Click \"Start Chat\" to begin your conversation on WhatsApp instantly. No more saving numbers! For businesses and personal use, you can also generate a link or QR code for others to initiate a chat with you. Easy and seamless."
+                // ... other translations ...
+            },
+            "hi": {
+                "choose_language": "भाषा चुनें",
+                "title": "WhatsDirect प्रो",
+                "description": "बिना नंबर सहेजे व्हाट्सएप पर चैट करें। सरलीकरें। बढ़ाएं। जुड़ें।",
+                "enter_number": "नंबर दर्ज करें",
+                "enter_message": "संदेश दर्ज करें (वैकल्पिक)",
+                "canned_responses": "या तेज संदेश का उपयोग करें",
+                "quick_hello": "नमस्ते, मैं आज आपकी कैसे मदद कर सकता हूँ?",
+                "quick_info": "क्या आप अधिक जानकारी प्रदान कर सकते हैं?",
+                "start_chat": "चैट शुरू करें",
+                "generate_link": "DirectChat लिंक उत्पन्न करें",
+                "how_it_works": "यह कैसे काम करता है?",
+                "how_it_works_description": "एक भाषा चुनें, प्राप्तकर्ता का नंबर टाइप करें और अपना संदेश टाइप करें या हमारे सुझावों में से एक चुनें। \"चैट शुरू करें\" पर क्लिक करके व्हाट्सएप पर अपनी बातचीत तुरंत शुरू करें। अब और नंबर सहेजने की जरूरत नहीं! व्यापारिक और व्यक्तिगत उपयोग के लिए, आप अन्य लोगों को आपसे चैट शुरू करने के लिए एक लिंक या क्यूआर कोड भी उत्पन्न कर सकते हैं। आसान और सीमित।"
+                // ... other translations ...
+            },
+            "hinglish": {
+                "choose_language": "Language select karo",
+                "title": "WhatsDirect Pro",
+                "description": "WhatsApp par chat karo bina number save kiye. Simplify karo. Enhance karo. Connect karo.",
+                "enter_number": "Number type karo",
+                "enter_message": "Message type karo (Optional)",
+                "canned_responses": "Ya quick messages use karo",
+                "quick_hello": "Hello, how can I assist you today?",
+                "quick_info": "Can you provide more information?",
+                "start_chat": "Chat start karo",
+                "generate_link": "DirectChat link generate karo",
+                "how_it_works": "Yeh kaise kaam karta hai?",
+                "how_it_works_description": "Ek language select karo, recipient ka number type karo, aur apna message type karo ya hamare suggestions mein se ek choose karo. \"Start Chat\" par click karke WhatsApp par conversation shuru karo. No need to save numbers! For business ya personal use, tum link ya QR code bhi generate kar sakte ho taaki others tumhe message kar sake. Easy and seamless."
+                // ... other translations ...
+            }
+        }
+
+        // Switch language function
+        function switchLanguage(lang) {
+            const elements = document.querySelectorAll('[data-text]');
+            elements.forEach(element => {
+                element.textContent = translations[lang][element.getAttribute('data-text')];
+            });
+        }
+
+        // Event listener for the language dropdown
+        document.getElementById('language').addEventListener('change', function() {
+            switchLanguage(this.value);
+        });
+
+
+    // Function to toggle the message input based on user choice
+        function toggleMessageInput() {
+            if ($("#customMessageRadio").is(":checked")) {
+                $('#cannedResponse').hide();
+                $('#message').show();
+            } else if ($("#cannedMessageRadio").is(":checked")) {
+                $('#cannedResponse').show();
+                $('#message').hide();
+            }
+        }
+
+        // Display the message dynamically
+        function updateDisplayMessage() {
+            let message = document.getElementById('message').value;
+            document.getElementById('displayMessage').textContent = message;
+        }
+
+        document.getElementById('message').addEventListener('input', updateDisplayMessage);
+        document.getElementById('cannedResponse').addEventListener('change', function() {
+            let selectedOption = this.options[this.selectedIndex];
+            console.log(selectedOption.text)
+            document.getElementById('message').value = selectedOption.text;
+            updateDisplayMessage();
+        });
+
+
+        // Display country-specific canned responses based on the selected country code
+        $('#countryCode').change(function() {
+            let countryCode = $(this).val();
+            // $('#cannedResponse option[data-country]').hide();
+            // $('#cannedResponse option[data-country="' + countryCode + '"]').show();
+        });
+
+        function generateLink() {
+
+             const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = ''; // Clear the QR container
+
+            // Hide the link display div
+            const linkDisplayDiv = document.getElementById("linkDisplay");
+            linkDisplayDiv.style.display = "none";
+             
+            let countryCode = $('#countryCode').val();
+            let number = $("#number").val().replace(/\D/g, ''); // Remove all non-digit characters
+            let message = $('#message').val() || $('#cannedResponse').val();
+            message = encodeURIComponent(message.trim());
+            let link = 'https://api.whatsapp.com/send?phone=' + countryCode + number + '&text=' + message;
+
+            // Generate QR Code
+            let qrcode = new QRCode("qrcode", {
+                text: link,
+                width: 128,
+                height: 128,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+            document.getElementById('qrcode').classList.remove('hidden');
+            document.getElementById('qrActions').classList.remove('hidden');
+
+    document.getElementById("linkDisplay").style.display = "block";
+    document.getElementById("whatsappLink").innerHTML = link;
+        }
+
+                    // Check for custom country code
+            document.getElementById('countryCode').addEventListener('change', function() {
+                if (this.value == "custom") {
+                    const customCode = prompt("Enter your custom country code:");
+                    this.options[this.selectedIndex].value = customCode;
+                    this.options[this.selectedIndex].text = "Custom (" + customCode + ")";
+                }
+            });
+
+
+        function sendMessage() {
+            let countryCode = document.getElementById('countryCode').value;
+            let number = document.getElementById('number').value;
+            let message = encodeURIComponent(document.getElementById('message').value);
+
+            // Construct the WhatsApp URL
+            if(number != ""){
+                console.log("number " + number)
+                let whatsappURL = `https://wa.me/${countryCode}${number}?text=${message}`;
+
+            // Open the WhatsApp chat
+            window.open(whatsappURL, '_blank');    
+            }
+            else{
+                alert("Please input a number")
+            }
+            
+        }
+
+        function downloadQRCodeWithText() {
+    // Get the original QR Code canvas
+    let qrCanvas = document.querySelector('#qrcode canvas');
+
+    // Create a new canvas element to hold the QR Code and the text
+    let combinedCanvas = document.createElement('canvas');
+    combinedCanvas.width = qrCanvas.width + 550; 
+    combinedCanvas.height = qrCanvas.height + 300; 
+
+    let ctx = combinedCanvas.getContext('2d');
+
+    // Set background color to white
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, combinedCanvas.width, combinedCanvas.height);
+
+    // Draw the original QR Code in the center of the new canvas
+    ctx.drawImage(qrCanvas, (combinedCanvas.width - qrCanvas.width) / 2, 170);
+
+    // Set text properties for the main text
+    ctx.font = '20px Arial';
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+
+    // Add the helper text above the QR Code
+    ctx.fillText("👋 Hey there! Scan & chat on WhatsApp!", combinedCanvas.width / 2, 140);
+
+    // Set text properties for the guide
+    ctx.font = '18px Arial';
+    ctx.fillText("For iPhone: Open Camera, point at QR, tap notification.", combinedCanvas.width / 2, combinedCanvas.height - 100);
+    ctx.fillText("For Android: Open Camera or Assistant, point at QR, tap link.", combinedCanvas.width / 2, combinedCanvas.height - 60);
+
+    // Convert the new canvas to an image for download
+    let image = combinedCanvas.toDataURL("image/png", 1.0).replace("image/png", "image/octet-stream");
+    
+    let link = document.createElement('a');
+    link.download = "whatsapp_qr.png";
+    link.href = image;
+    link.click();
+}
+
+
+
+
+
+
+        // Initialize the tooltip
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+</script>
 
 </html>
